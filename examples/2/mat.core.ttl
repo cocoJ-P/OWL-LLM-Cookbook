@@ -1,0 +1,346 @@
+@prefix : <https://purl.mechon.org/ont/mat#> .
+@prefix mat: <https://purl.mechon.org/ont/mat#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix phy: <https://purl.mechon.org/ont/phy#> .
+@base <https://purl.mechon.org/ont/mat#> .
+
+<https://purl.mechon.org/ont/mat> rdf:type owl:Ontology ;
+                                   owl:versionIRI <https://purl.mechon.org/ont/mat/0.1.0> .
+#                                   owl:imports <http://www.w3.org/2004/02/skos/core> ,
+#                                               <https://purl.mechon.org/ont/phy/0.1.0> .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://www.w3.org/2002/07/owl#hasValue
+owl:hasValue rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://purl.mechon.org/ont/mat#hasMatrixSymType
+mat:hasMatrixSymType rdf:type owl:ObjectProperty ;
+                     rdfs:domain mat:Tensor ;
+                     rdfs:range mat:MatrixSymType .
+
+
+###  https://purl.mechon.org/ont/mat#hasSymmetryType
+mat:hasSymmetryType rdf:type owl:ObjectProperty .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  https://purl.mechon.org/ont/mat#hasTensorOrder
+mat:hasTensorOrder rdf:type owl:DatatypeProperty ,
+                            owl:FunctionalProperty ;
+                   rdfs:domain mat:Tensor ;
+                   rdfs:range xsd:nonNegativeInteger .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://purl.mechon.org/ont/mat#AntiSymmetricTensor
+mat:AntiSymmetricTensor rdf:type owl:Class ;
+                        owl:equivalentClass [ owl:intersectionOf ( mat:SecondOrderTensor
+                                                                   [ rdf:type owl:Restriction ;
+                                                                     owl:onProperty mat:hasMatrixSymType ;
+                                                                     owl:hasValue mat:AntiSymmetric
+                                                                   ]
+                                                                 ) ;
+                                              rdf:type owl:Class
+                                            ] .
+
+
+###  https://purl.mechon.org/ont/mat#Compressibility
+mat:Compressibility rdf:type owl:Class ;
+                    rdfs:subClassOf mat:ZeroOrderTensor .
+mat:Compressibility rdfs:subClassOf phy:DerivedQuantity  ,
+    [ a owl:Restriction ; owl:onProperty phy:derivedFrom ; owl:someValuesFrom mat:PressureScalar ] ;
+    rdfs:comment "Isothermal compressibility β = -(1/V)(∂V/∂p)"@en .
+
+
+###  https://purl.mechon.org/ont/mat#Density
+mat:Density rdf:type owl:Class ;
+            rdfs:subClassOf mat:ZeroOrderTensor .
+mat:Density rdfs:subClassOf phy:PhysicalQuantity .
+
+###  https://purl.mechon.org/ont/mat#DynamicViscosity
+mat:DynamicViscosity rdf:type owl:Class ;
+                     rdfs:subClassOf mat:Viscosity .
+mat:DynamicViscosity rdfs:subClassOf phy:PhysicalQuantity .
+
+
+
+###  https://purl.mechon.org/ont/mat#Entropy
+mat:Entropy rdf:type owl:Class ;
+            rdfs:subClassOf mat:ZeroOrderTensor .
+mat:Entropy rdfs:subClassOf phy:DerivedQuantity ,
+    [ a owl:Restriction ; owl:onProperty phy:derivedFrom ; owl:someValuesFrom mat:Density ] ,
+    [ a owl:Restriction ; owl:onProperty phy:derivedFrom ; owl:someValuesFrom mat:TemperatureScalar ] ;
+    rdfs:comment "Specific entropy as function of ρ and T"@en .
+
+
+###  https://purl.mechon.org/ont/mat#Field
+mat:Field rdf:type owl:Class .
+
+
+###  https://purl.mechon.org/ont/mat#FirstOrderTensor
+mat:FirstOrderTensor rdf:type owl:Class ;
+                     rdfs:subClassOf mat:Tensor ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty mat:hasTensorOrder ;
+                                       owl:hasValue 1
+                                     ] ;
+                     owl:disjointWith mat:SecondOrderTensor ,
+                                      mat:ZeroOrderTensor ;
+                     rdfs:comment "Tensor fields of order 1 (vector quantities)."@en ;
+                     rdfs:label "Vector Tensor"@en .
+
+
+###  https://purl.mechon.org/ont/mat#InternalEnergy
+mat:InternalEnergy rdf:type owl:Class ;
+                   rdfs:subClassOf mat:ZeroOrderTensor .
+mat:InternalEnergy rdfs:subClassOf phy:DerivedQuantity ,
+    [ a owl:Restriction ; owl:onProperty phy:derivedFrom ; owl:someValuesFrom mat:Density ] ,
+    [ a owl:Restriction ; owl:onProperty phy:derivedFrom ; owl:someValuesFrom mat:TemperatureScalar ] ;
+    rdfs:comment "Specific internal energy as function of ρ and T"@en .
+
+
+###  https://purl.mechon.org/ont/mat#KinematicViscosity
+mat:KinematicViscosity rdf:type owl:Class ;
+                       rdfs:subClassOf mat:Viscosity .
+mat:KinematicViscosity rdfs:subClassOf phy:DerivedQuantity ,
+    [ a owl:Restriction ; owl:onProperty phy:derivedFrom ; owl:someValuesFrom mat:DynamicViscosity ] ,
+    [ a owl:Restriction ; owl:onProperty phy:derivedFrom ; owl:someValuesFrom mat:Density ] ;
+    rdfs:comment "Kinematic viscosity ν = μ / ρ"@en .
+
+
+###  https://purl.mechon.org/ont/mat#KineticEnergy
+mat:KineticEnergy rdf:type owl:Class ;
+                  rdfs:subClassOf mat:ZeroOrderTensor .
+mat:KineticEnergy rdfs:subClassOf phy:DerivedQuantity ,
+    [ a owl:Restriction ; owl:onProperty phy:derivedFrom ; owl:someValuesFrom mat:Density ] ,
+    [ a owl:Restriction ; owl:onProperty phy:derivedFrom ; owl:someValuesFrom mat:VelocityVector ] ;
+    rdfs:comment "Volumetric kinetic energy density k = ½ ρ‖u‖²"@en .
+
+
+###  https://purl.mechon.org/ont/mat#MatrixSymType
+mat:MatrixSymType rdf:type owl:Class ;
+                  owl:equivalentClass [ rdf:type owl:Class ;
+                                        owl:oneOf ( mat:AntiSymmetric
+                                                    mat:General
+                                                    mat:Symmetric
+                                                  )
+                                      ] .
+
+
+###  https://purl.mechon.org/ont/mat#PressureScalar
+mat:PressureScalar rdf:type owl:Class ;
+                   rdfs:subClassOf mat:ZeroOrderTensor .
+mat:PressureScalar rdfs:subClassOf phy:PhysicalQuantity .
+
+
+###  https://purl.mechon.org/ont/mat#SecondOrderTensor
+mat:SecondOrderTensor rdf:type owl:Class ;
+                      rdfs:subClassOf mat:Tensor ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty mat:hasTensorOrder ;
+                                        owl:hasValue 2
+                                      ] ;
+                      owl:disjointWith mat:ZeroOrderTensor ;
+                      rdfs:comment "Tensor fields of order 2 (matrices)."@en ;
+                      rdfs:label "Matrix Tensor"@en .
+
+
+###  https://purl.mechon.org/ont/mat#StrainRateField
+mat:StrainRateField rdf:type owl:Class ;
+                    owl:equivalentClass [ owl:intersectionOf ( mat:Field
+                                                               mat:StrainRateTensor
+                                                             ) ;
+                                          rdf:type owl:Class
+                                        ] ;
+                    rdfs:label "Strain-rate field"@en ;
+                    <http://www.w3.org/2004/02/skos/core#altLabel> "应变率场"@zh .
+
+
+###  https://purl.mechon.org/ont/mat#StrainRateTensor
+mat:StrainRateTensor rdf:type owl:Class ;
+                     owl:equivalentClass [ owl:intersectionOf ( mat:SecondOrderTensor
+                                                                [ rdf:type owl:Restriction ;
+                                                                  owl:onProperty mat:hasMatrixSymType ;
+                                                                  owl:hasValue mat:Symmetric
+                                                                ]
+                                                              ) ;
+                                           rdf:type owl:Class
+                                         ] ;
+                     rdfs:comment "Rate of deformation D_ij = (∂u_i/∂x_j + ∂u_j/∂x_i)/2"@en ;
+                     rdfs:label "Strain-rate tensor"@en ;
+                     <http://www.w3.org/2004/02/skos/core#altLabel> "应变率张量"@zh .
+
+
+###  https://purl.mechon.org/ont/mat#StressField
+mat:StressField rdf:type owl:Class ;
+                owl:equivalentClass [ owl:intersectionOf ( mat:Field
+                                                           mat:StressTensor
+                                                         ) ;
+                                      rdf:type owl:Class
+                                    ] ;
+                rdfs:label "Stress field"@en ;
+                <http://www.w3.org/2004/02/skos/core#altLabel> "应力场"@zh .
+
+
+###  https://purl.mechon.org/ont/mat#StressTensor
+mat:StressTensor rdf:type owl:Class ;
+                 rdfs:subClassOf mat:SymmetricTensor ;
+                 rdfs:label "Stress Tensor"@en ;
+                 <http://www.w3.org/2004/02/skos/core#altLabel> "应力"@zh .
+
+
+###  https://purl.mechon.org/ont/mat#SymmetricTensor
+mat:SymmetricTensor rdf:type owl:Class ;
+                    owl:equivalentClass [ owl:intersectionOf ( mat:SecondOrderTensor
+                                                               [ rdf:type owl:Restriction ;
+                                                                 owl:onProperty mat:hasMatrixSymType ;
+                                                                 owl:hasValue mat:Symmetric
+                                                               ]
+                                                             ) ;
+                                          rdf:type owl:Class
+                                        ] .
+
+
+###  https://purl.mechon.org/ont/mat#SymmetryType
+mat:SymmetryType rdf:type owl:Class ;
+                 owl:equivalentClass [ rdf:type owl:Class ;
+                                       owl:oneOf ( mat:Anisotropic
+                                                   mat:Isotropic
+                                                   mat:Orthotropic
+                                                 )
+                                     ] .
+
+
+###  https://purl.mechon.org/ont/mat#TemperatureScalar
+mat:TemperatureScalar rdf:type owl:Class ;
+                      rdfs:subClassOf mat:ZeroOrderTensor .
+mat:TemperatureScalar rdfs:subClassOf phy:PhysicalQuantity .
+
+
+###  https://purl.mechon.org/ont/mat#Tensor
+mat:Tensor rdf:type owl:Class .
+
+
+###  https://purl.mechon.org/ont/mat#ThermalConductivity
+mat:ThermalConductivity rdf:type owl:Class ;
+                        rdfs:subClassOf mat:ZeroOrderTensor .
+mat:ThermalConductivity rdfs:subClassOf phy:DerivedQuantity .
+
+
+###  https://purl.mechon.org/ont/mat#ThermalExpansion
+mat:ThermalExpansion rdf:type owl:Class ;
+                     rdfs:subClassOf mat:ZeroOrderTensor .
+mat:ThermalExpansion rdfs:subClassOf phy:DerivedQuantity .
+
+###  https://purl.mechon.org/ont/mat#VelocityField
+mat:VelocityField rdf:type owl:Class ;
+                  owl:equivalentClass [ owl:intersectionOf ( mat:Field
+                                                             mat:VelocityVector
+                                                           ) ;
+                                        rdf:type owl:Class
+                                      ] ;
+                  rdfs:label "Velocity field"@en ;
+                  <http://www.w3.org/2004/02/skos/core#altLabel> "速度场"@zh .
+
+
+###  https://purl.mechon.org/ont/mat#VelocityVector
+mat:VelocityVector rdf:type owl:Class ;
+                   rdfs:subClassOf mat:FirstOrderTensor .
+
+
+###  https://purl.mechon.org/ont/mat#Viscosity
+mat:Viscosity rdf:type owl:Class ;
+              rdfs:subClassOf mat:ZeroOrderTensor .
+
+
+###  https://purl.mechon.org/ont/mat#VorticityField
+mat:VorticityField rdf:type owl:Class ;
+                   owl:equivalentClass [ owl:intersectionOf ( mat:Field
+                                                              mat:VorticityTensor
+                                                            ) ;
+                                         rdf:type owl:Class
+                                       ] ;
+                   rdfs:label "Vorticity field"@en ;
+                   <http://www.w3.org/2004/02/skos/core#altLabel> "旋转率场"@zh .
+
+
+###  https://purl.mechon.org/ont/mat#VorticityTensor
+mat:VorticityTensor rdf:type owl:Class ;
+                    rdfs:subClassOf mat:AntiSymmetricTensor ;
+                    rdfs:label "Vorticity Tensor"@en ;
+                    <http://www.w3.org/2004/02/skos/core#altLabel> "旋转率张量"@zh .
+
+
+###  https://purl.mechon.org/ont/mat#ZeroOrderTensor
+mat:ZeroOrderTensor rdf:type owl:Class ;
+                    owl:equivalentClass [ rdf:type owl:Class ;
+                                          owl:oneOf ( mat:AntiSymmetric
+                                                      mat:General
+                                                      mat:Symmetric
+                                                    )
+                                        ] ;
+                    rdfs:subClassOf mat:Tensor ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty mat:hasTensorOrder ;
+                                      owl:hasValue 0
+                                    ] ;
+                    rdfs:comment "Tensor fields of order 0 (scalar quantities)."@en ;
+                    rdfs:label "Scalar Tensor"@en .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  https://purl.mechon.org/ont/mat#Anisotropic
+mat:Anisotropic rdf:type owl:NamedIndividual ,
+                         mat:SymmetryType .
+
+
+###  https://purl.mechon.org/ont/mat#AntiSymmetric
+mat:AntiSymmetric rdf:type owl:NamedIndividual ,
+                           mat:MatrixSymType .
+
+
+###  https://purl.mechon.org/ont/mat#General
+mat:General rdf:type owl:NamedIndividual ,
+                     mat:MatrixSymType .
+
+
+###  https://purl.mechon.org/ont/mat#Isotropic
+mat:Isotropic rdf:type owl:NamedIndividual ,
+                       mat:SymmetryType .
+
+
+###  https://purl.mechon.org/ont/mat#Orthotropic
+mat:Orthotropic rdf:type owl:NamedIndividual ,
+                         mat:SymmetryType .
+
+
+###  https://purl.mechon.org/ont/mat#Symmetric
+mat:Symmetric rdf:type owl:NamedIndividual ,
+                       mat:MatrixSymType .
+
+
+[ owl:hasValue "2"^^xsd:nonNegativeInteger
+] .
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi

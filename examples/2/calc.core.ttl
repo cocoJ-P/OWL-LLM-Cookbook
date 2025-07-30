@@ -1,0 +1,135 @@
+@prefix : <https://purl.mechon.org/ont/calc#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix calc: <https://purl.mechon.org/ont/calc#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <https://purl.mechon.org/ont/calc#> .
+
+<https://purl.mechon.org/ont/calc> rdf:type owl:Ontology ;
+                                    owl:versionIRI <https://purl.mechon.org/ont/calc/0.1.0> .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://purl.mechon.org/ont/calc#hasPDEType
+calc:hasPDEType rdf:type owl:ObjectProperty ;
+                rdfs:domain calc:PDEEquation ;
+                rdfs:range calc:PDEType ;
+                rdfs:label "has PDE type"@en .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://purl.mechon.org/ont/calc#AdvectionEquation
+calc:AdvectionEquation rdf:type owl:Class ;
+                       rdfs:subClassOf calc:HyperbolicPDE .
+
+
+###  https://purl.mechon.org/ont/calc#EllipticPDE
+calc:EllipticPDE rdf:type owl:Class ;
+                 owl:equivalentClass [ owl:intersectionOf ( calc:PDEEquation
+                                                            [ rdf:type owl:Restriction ;
+                                                              owl:onProperty calc:hasPDEType ;
+                                                              owl:hasValue calc:Elliptic
+                                                            ]
+                                                          ) ;
+                                       rdf:type owl:Class
+                                     ] .
+
+
+###  https://purl.mechon.org/ont/calc#Equation
+calc:Equation rdf:type owl:Class .
+
+
+###  https://purl.mechon.org/ont/calc#HeatEquation
+calc:HeatEquation rdf:type owl:Class ;
+                  rdfs:subClassOf calc:ParabolicPDE .
+
+
+###  https://purl.mechon.org/ont/calc#HyperbolicPDE
+calc:HyperbolicPDE rdf:type owl:Class ;
+                   owl:equivalentClass [ owl:intersectionOf ( calc:PDEEquation
+                                                              [ rdf:type owl:Restriction ;
+                                                                owl:onProperty calc:hasPDEType ;
+                                                                owl:hasValue calc:Hyperbolic
+                                                              ]
+                                                            ) ;
+                                         rdf:type owl:Class
+                                       ] .
+
+
+###  https://purl.mechon.org/ont/calc#IncompNSMomentumEquation
+calc:IncompNSMomentumEquation rdf:type owl:Class ;
+                              rdfs:subClassOf calc:PDEEquation .
+
+
+###  https://purl.mechon.org/ont/calc#LaplaceEquation
+calc:LaplaceEquation rdf:type owl:Class ;
+                     rdfs:subClassOf calc:EllipticPDE .
+
+
+###  https://purl.mechon.org/ont/calc#PDEEquation
+calc:PDEEquation rdf:type owl:Class ;
+                 rdfs:subClassOf calc:Equation .
+
+
+###  https://purl.mechon.org/ont/calc#PDEType
+calc:PDEType rdf:type owl:Class ;
+             owl:equivalentClass [ rdf:type owl:Class ;
+                                   owl:oneOf ( calc:Elliptic
+                                               calc:Hyperbolic
+                                               calc:MixedType
+                                               calc:Parabolic
+                                             )
+                                 ] ;
+             rdfs:subClassOf calc:Equation .
+
+
+###  https://purl.mechon.org/ont/calc#ParabolicPDE
+calc:ParabolicPDE rdf:type owl:Class ;
+                  owl:equivalentClass [ owl:intersectionOf ( calc:PDEEquation
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty calc:hasPDEType ;
+                                                               owl:hasValue calc:Parabolic
+                                                             ]
+                                                           ) ;
+                                        rdf:type owl:Class
+                                      ] .
+
+
+###  https://purl.mechon.org/ont/calc#PressurePoissonEquation
+calc:PressurePoissonEquation rdf:type owl:Class ;
+                             rdfs:subClassOf calc:EllipticPDE .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  https://purl.mechon.org/ont/calc#Elliptic
+calc:Elliptic rdf:type owl:NamedIndividual .
+
+
+###  https://purl.mechon.org/ont/calc#Hyperbolic
+calc:Hyperbolic rdf:type owl:NamedIndividual .
+
+
+###  https://purl.mechon.org/ont/calc#IncompNSMomentumEquation
+calc:IncompNSMomentumEquation rdf:type owl:NamedIndividual ;
+                              calc:hasPDEType calc:Parabolic .
+
+
+###  https://purl.mechon.org/ont/calc#MixedType
+calc:MixedType rdf:type owl:NamedIndividual .
+
+
+###  https://purl.mechon.org/ont/calc#Parabolic
+calc:Parabolic rdf:type owl:NamedIndividual .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi

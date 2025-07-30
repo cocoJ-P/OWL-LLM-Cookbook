@@ -1,0 +1,282 @@
+@prefix : <https://purl.mechon.org/ont/geo#> .
+@prefix geo: <https://purl.mechon.org/ont/geo#> .
+@prefix mat: <https://purl.mechon.org/ont/mat#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <https://purl.mechon.org/ont/geo#> .
+
+<https://purl.mechon.org/ont/geo> rdf:type owl:Ontology ;
+                                   owl:versionIRI <https://purl.mechon.org/ont/geo/0.1.0> .
+#                                   owl:imports <http://www.w3.org/2004/02/skos/core> .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://purl.mechon.org/ont/geo#definedOn
+geo:definedOn rdf:type owl:ObjectProperty ;
+              rdfs:domain mat:Field ;
+              rdfs:range geo:Domain .
+
+
+###  https://purl.mechon.org/ont/geo#hasBoundaryPatch
+geo:hasBoundaryPatch rdf:type owl:ObjectProperty ;
+                     owl:inverseOf geo:isBoundaryPatchOf ;
+                     rdfs:domain geo:Domain ;
+                     rdfs:range geo:BoundaryPatch .
+
+
+###  https://purl.mechon.org/ont/geo#hasCoordinateSystem
+geo:hasCoordinateSystem rdf:type owl:ObjectProperty ;
+                        rdfs:domain geo:SpatialEntity ;
+                        rdfs:range geo:CoordinateSystem .
+
+
+###  https://purl.mechon.org/ont/geo#isBoundaryPatchOf
+geo:isBoundaryPatchOf rdf:type owl:ObjectProperty ;
+                      rdfs:domain geo:BoundaryPatch ;
+                      rdfs:range geo:Domain ;
+                      rdfs:label "is boundary patch of"@en ;
+                      <http://www.w3.org/2004/02/skos/core#altLabel> "属于域"@zh .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://purl.mechon.org/ont/geo#AirfoilDomain
+geo:AirfoilDomain rdf:type owl:Class ;
+                  rdfs:subClassOf geo:ExternalFlowDomain ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty geo:hasBoundaryPatch ;
+                                    owl:someValuesFrom geo:WallBoundary
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty geo:hasCoordinateSystem ;
+                                    owl:someValuesFrom geo:CartesianCS
+                                  ] ;
+                  rdfs:comment "External aerodynamics around an airfoil; includes airfoil wall and farfield boundary."@en ;
+                  rdfs:label "Airfoil flow domain"@en ;
+                  <http://www.w3.org/2004/02/skos/core#altLabel> "翼型外流域"@zh .
+
+
+###  https://purl.mechon.org/ont/geo#BoundaryPatch
+geo:BoundaryPatch rdf:type owl:Class ;
+                  rdfs:subClassOf geo:SpatialEntity .
+
+
+###  https://purl.mechon.org/ont/geo#CartesianCS
+geo:CartesianCS rdf:type owl:Class ;
+                rdfs:subClassOf geo:CoordinateSystem .
+
+
+###  https://purl.mechon.org/ont/geo#CavityDomain
+geo:CavityDomain rdf:type owl:Class ;
+                 rdfs:subClassOf geo:Domain ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty geo:hasBoundaryPatch ;
+                                   owl:someValuesFrom geo:WallBoundary
+                                 ] ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty geo:hasCoordinateSystem ;
+                                   owl:someValuesFrom geo:CartesianCS
+                                 ] ;
+                 rdfs:comment "Closed cavity (e.g., lid-driven cavity); all walls, no inlet/outlet."@en ;
+                 rdfs:label "Cavity flow domain"@en ;
+                 <http://www.w3.org/2004/02/skos/core#altLabel> "腔体流域"@zh .
+
+
+###  https://purl.mechon.org/ont/geo#ChannelDomain
+geo:ChannelDomain rdf:type owl:Class ;
+                  rdfs:subClassOf geo:InternalFlowDomain ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty geo:hasCoordinateSystem ;
+                                    owl:someValuesFrom geo:CartesianCS
+                                  ] ;
+                  rdfs:comment "Parallel-wall internal channel; Cartesian coordinates typical."@en ;
+                  rdfs:label "Channel flow domain"@en ;
+                  <http://www.w3.org/2004/02/skos/core#altLabel> "通道流域"@zh .
+
+
+###  https://purl.mechon.org/ont/geo#CoordinateSystem
+geo:CoordinateSystem rdf:type owl:Class ;
+                     rdfs:subClassOf geo:SpatialEntity .
+
+
+###  https://purl.mechon.org/ont/geo#CylindricalCS
+geo:CylindricalCS rdf:type owl:Class ;
+                  rdfs:subClassOf geo:CoordinateSystem .
+
+
+###  https://purl.mechon.org/ont/geo#Domain
+geo:Domain rdf:type owl:Class ;
+           rdfs:subClassOf geo:SpatialEntity ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty geo:hasCoordinateSystem ;
+                             owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                             owl:onClass geo:CoordinateSystem
+                           ] .
+
+
+###  https://purl.mechon.org/ont/geo#ExternalFlowDomain
+geo:ExternalFlowDomain rdf:type owl:Class ;
+                       rdfs:subClassOf geo:Domain ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty geo:hasBoundaryPatch ;
+                                         owl:someValuesFrom geo:FarfieldBoundary
+                                       ] ;
+                       rdfs:comment "Generic external/aerodynamic flow: at least one farfield boundary; may include walls (bodies), symmetry planes, etc."@en ;
+                       rdfs:label "External flow domain"@en ;
+                       <http://www.w3.org/2004/02/skos/core#altLabel> "外部流域"@zh .
+
+
+###  https://purl.mechon.org/ont/geo#FarfieldBoundary
+geo:FarfieldBoundary rdf:type owl:Class ;
+                     rdfs:subClassOf geo:BoundaryPatch ;
+                     rdfs:label "Farfield boundary"@en ;
+                     <http://www.w3.org/2004/02/skos/core#altLabel> "远场边界"@zh .
+
+
+###  https://purl.mechon.org/ont/geo#FlatPlateDomain
+geo:FlatPlateDomain rdf:type owl:Class ;
+                    rdfs:subClassOf geo:ExternalFlowDomain ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty geo:hasBoundaryPatch ;
+                                      owl:someValuesFrom geo:WallBoundary
+                                    ] ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty geo:hasCoordinateSystem ;
+                                      owl:someValuesFrom geo:CartesianCS
+                                    ] ;
+                    rdfs:comment "External flow over a flat plate; includes wall (plate surface) and farfield boundary."@en ;
+                    rdfs:label "Flat-plate flow domain"@en ;
+                    <http://www.w3.org/2004/02/skos/core#altLabel> "平板外流域"@zh .
+
+
+###  https://purl.mechon.org/ont/geo#InletBoundary
+geo:InletBoundary rdf:type owl:Class ;
+                  rdfs:subClassOf geo:BoundaryPatch .
+
+
+###  https://purl.mechon.org/ont/geo#InterfaceBoundary
+geo:InterfaceBoundary rdf:type owl:Class ;
+                      rdfs:subClassOf geo:BoundaryPatch ;
+                      rdfs:label "Interface boundary"@en ;
+                      <http://www.w3.org/2004/02/skos/core#altLabel> "界面边界"@zh .
+
+
+###  https://purl.mechon.org/ont/geo#InternalFlowDomain
+geo:InternalFlowDomain rdf:type owl:Class ;
+                       rdfs:subClassOf geo:Domain ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty geo:hasBoundaryPatch ;
+                                         owl:someValuesFrom geo:InletBoundary
+                                       ] ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty geo:hasBoundaryPatch ;
+                                         owl:someValuesFrom geo:OutletBoundary
+                                       ] ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty geo:hasBoundaryPatch ;
+                                         owl:someValuesFrom geo:WallBoundary
+                                       ] ;
+                       rdfs:comment "Generic internal-conduit flow: at least one inlet, one outlet, one wall."@en ;
+                       rdfs:label "Internal flow domain"@en ;
+                       <http://www.w3.org/2004/02/skos/core#altLabel> "内部流域" .
+
+
+###  https://purl.mechon.org/ont/geo#Mesh
+geo:Mesh rdf:type owl:Class ;
+         rdfs:subClassOf geo:Domain .
+
+
+###  https://purl.mechon.org/ont/geo#MeshCell
+geo:MeshCell rdf:type owl:Class ;
+             rdfs:subClassOf geo:SpatialEntity .
+
+
+###  https://purl.mechon.org/ont/geo#MovingWallBoundary
+geo:MovingWallBoundary rdf:type owl:Class ;
+                       rdfs:subClassOf geo:BoundaryPatch .
+
+
+###  https://purl.mechon.org/ont/geo#NoSlipWallBoundary
+geo:NoSlipWallBoundary rdf:type owl:Class ;
+                       rdfs:subClassOf geo:WallBoundary .
+
+
+###  https://purl.mechon.org/ont/geo#NozzleDomain
+geo:NozzleDomain rdf:type owl:Class ;
+                 rdfs:subClassOf geo:InternalFlowDomain ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty geo:hasCoordinateSystem ;
+                                   owl:someValuesFrom geo:CylindricalCS
+                                 ] ;
+                 rdfs:comment "Converging/diverging internal duct; at least inlet, outlet, and wall; usually axisymmetric."@en ;
+                 rdfs:label "Nozzle flow domain"@en ;
+                 <http://www.w3.org/2004/02/skos/core#prefLabel> "喷管流域"@zh .
+
+
+###  https://purl.mechon.org/ont/geo#OutletBoundary
+geo:OutletBoundary rdf:type owl:Class ;
+                   rdfs:subClassOf geo:BoundaryPatch .
+
+
+###  https://purl.mechon.org/ont/geo#PeriodicBoundary
+geo:PeriodicBoundary rdf:type owl:Class ;
+                     rdfs:subClassOf geo:BoundaryPatch ;
+                     rdfs:label "Periodic boundary"@en ;
+                     <http://www.w3.org/2004/02/skos/core#altLabel> "周期边界"@zh .
+
+
+###  https://purl.mechon.org/ont/geo#PipeDomain
+geo:PipeDomain rdf:type owl:Class ;
+               rdfs:subClassOf geo:InternalFlowDomain ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty geo:hasCoordinateSystem ;
+                                 owl:someValuesFrom geo:CylindricalCS
+                               ] ;
+               rdfs:comment "Circular conduit (internal) flow; typically modeled in cylindrical coordinates."@en ;
+               rdfs:label "Pipe flow domain"@en ;
+               <http://www.w3.org/2004/02/skos/core#altLabel> "管道流域"@zh .
+
+
+###  https://purl.mechon.org/ont/geo#ReferenceFrame
+geo:ReferenceFrame rdf:type owl:Class ;
+                   rdfs:subClassOf geo:SpatialEntity .
+
+
+###  https://purl.mechon.org/ont/geo#ReflectiveBoundary
+geo:ReflectiveBoundary rdf:type owl:Class ;
+                       rdfs:subClassOf geo:BoundaryPatch .
+
+
+###  https://purl.mechon.org/ont/geo#SlipWallBoundary
+geo:SlipWallBoundary rdf:type owl:Class ;
+                     rdfs:subClassOf geo:WallBoundary .
+
+
+###  https://purl.mechon.org/ont/geo#SpatialEntity
+geo:SpatialEntity rdf:type owl:Class .
+
+
+###  https://purl.mechon.org/ont/geo#SymmetryBoundary
+geo:SymmetryBoundary rdf:type owl:Class ;
+                     rdfs:subClassOf geo:BoundaryPatch ;
+                     rdfs:label "Symmetry boundary"@en ;
+                     <http://www.w3.org/2004/02/skos/core#altLabel> "对称边界"@zh .
+
+
+###  https://purl.mechon.org/ont/geo#WallBoundary
+geo:WallBoundary rdf:type owl:Class ;
+                 rdfs:subClassOf geo:BoundaryPatch .
+
+
+###  https://purl.mechon.org/ont/mat#Field
+mat:Field rdf:type owl:Class .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
