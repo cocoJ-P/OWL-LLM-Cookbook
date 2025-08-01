@@ -10,7 +10,8 @@
                                      owl:versionIRI <https://purl.mechon.org/ont/fluid/0.1.0> ;
                                      owl:imports <https://purl.mechon.org/ont/calc/0.1.0> ,
                                                  <https://purl.mechon.org/ont/geo/0.1.0> ,
-                                                 <https://purl.mechon.org/ont/mat/0.1.0> .
+                                                 <https://purl.mechon.org/ont/mat/0.1.0> ,
+                                                 <https://purl.mechon.org/ont/phy/0.1.0> .
 
 #################################################################
 #    Object Properties

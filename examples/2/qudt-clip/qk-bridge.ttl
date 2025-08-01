@@ -3,6 +3,12 @@
 @prefix qudtqk: <http://qudt.org/vocab/quantitykind/> .
 @prefix qudtunit: <http://qudt.org/vocab/unit/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <https://purl.mechon.org/ont/bridge/qk-bridge#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+
+<https://purl.mechon.org/ont/bridge/qk-bridge> rdf:type owl:Ontology ;
+                                                   owl:versionIRI <https://purl.mechon.org/ont/bridge/qk-bridge/0.1.0> .
 
 qudtqk:APIGravity a qudt:QuantityKind ;
     rdfs:label "API Gravity"@en ;
